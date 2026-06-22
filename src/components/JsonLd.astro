@@ -1,0 +1,60 @@
+---
+// 結構化資料元件：依頁面類型輸出 Product 或 Article 的 JSON-LD
+// Google 會用這個資料產生 rich snippet（價格、星等、發布日期等）
+
+interface ProductProps {
+  type: 'Product';
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  currency: string;
+  availability: 'InStock' | 'OutOfStock' | 'PreOrder';
+  category: string;
+}
+
+interface ArticleProps {
+  type: 'Article';
+  headline: string;
+  description: string;
+  image: string;
+  datePublished: Date;
+  dateModified?: Date;
+}
+
+type Props = ProductProps | ArticleProps;
+
+const props = Astro.props;
+const imageURL = new URL(props.image, Astro.site).toString();
+
+let jsonLd: Record<string, unknown>;
+
+if (props.type === 'Product') {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: props.name,
+    description: props.description,
+    image: imageURL,
+    category: props.category,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: props.currency,
+      price: props.price,
+      availability: `https://schema.org/${props.availability}`,
+    },
+  };
+} else {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: props.headline,
+    description: props.description,
+    image: imageURL,
+    datePublished: props.datePublished.toISOString(),
+    dateModified: (props.dateModified ?? props.datePublished).toISOString(),
+  };
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

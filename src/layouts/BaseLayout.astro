@@ -1,0 +1,180 @@
+---
+import SEO from '../components/SEO.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article' | 'product';
+}
+
+const { title, description, image, type } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO title={title} description={description} image={image} type={type} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+TC:wght@700;900&family=Noto+Serif+TC:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="logo">
+        <span class="logo-mark" aria-hidden="true">⛑</span>
+        <span class="logo-text">RIDERMENT<span class="logo-sub">安全帽選購誌</span></span>
+      </a>
+      <nav class="site-nav">
+        <a href="/">所有文章</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} Riderment 安全帽選購誌・本站文章為實測與選購建議，非醫療或安全認證背書。</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    /* 色彩：取自安全帽世界——說明書紙張、瀝青、反光警示橘、認證貼紙紅 */
+    --color-paper: #faf7f2;
+    --color-ink: #1c1b19;
+    --color-asphalt: #57534c;
+    --color-signal: #ff5722;
+    --color-stamp: #b3261e;
+    --color-hairline: #dedad2;
+
+    --font-display: 'Oswald', 'Noto Sans TC', sans-serif;
+    --font-body: 'Source Serif 4', 'Noto Serif TC', serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    --measure: 680px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* 導覽列：刻意不做卡片化，用單一細線分隔，呼應「極簡」需求 */
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 1.75rem 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-family: var(--font-display);
+  }
+
+  .logo-mark {
+    font-size: 1.3rem;
+    filter: grayscale(1);
+  }
+
+  .logo-text {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    font-size: 1rem;
+  }
+
+  .logo-sub {
+    margin-left: 0.6rem;
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--color-asphalt);
+    letter-spacing: 0;
+    font-size: 0.95rem;
+  }
+
+  .site-nav a {
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    color: var(--color-asphalt);
+  }
+
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .site-footer {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    border-top: 1px solid var(--color-hairline);
+    color: var(--color-asphalt);
+    font-size: 0.8rem;
+  }
+
+  /* 認證貼紙樣式：簽名元素，靈感來自安全帽內裡的 DOT/ECE 驗證標籤 */
+  .cert-stamp {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    border: 1.5px dashed var(--color-stamp);
+    color: var(--color-stamp);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.5rem 0.85rem;
+    transform: rotate(-1.5deg);
+    background: color-mix(in srgb, var(--color-stamp) 4%, transparent);
+  }
+
+  .cert-stamp b {
+    font-size: 0.95rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+</style>

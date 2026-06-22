@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720">
+  <rect width="960" height="720" fill="#1c1b19"/>
+  <circle cx="480" cy="330" r="180" fill="#3d3b38"/>
+  <path d="M300 330a180 180 0 0 1 360 0v60H300z" fill="#ff5722"/>
+  <rect x="360" y="360" width="240" height="90" rx="10" fill="#1c1b19" opacity="0.5"/>
+  <text x="480" y="600" font-family="Arial, sans-serif" font-size="34" fill="#faf7f2" text-anchor="middle">範例商品圖片（請替換）</text>
+</svg>

@@ -1,0 +1,171 @@
+---
+import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import JsonLd from '../../components/JsonLd.astro';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products', ({ data }) => !data.draft);
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const { Content } = await render(product);
+const optimized = await getImage({ src: product.data.image, width: 960 });
+
+const priceFormatted = new Intl.NumberFormat('zh-TW', {
+  style: 'currency',
+  currency: product.data.currency,
+  maximumFractionDigits: 0,
+}).format(product.data.price);
+---
+
+<BaseLayout
+  title={product.data.title}
+  description={product.data.description}
+  image={optimized.src}
+  type="product"
+>
+  <JsonLd
+    type="Product"
+    name={product.data.title}
+    description={product.data.description}
+    image={optimized.src}
+    price={product.data.price}
+    currency={product.data.currency}
+    availability={product.data.availability}
+    category={product.data.category}
+  />
+  <JsonLd
+    type="Article"
+    headline={product.data.title}
+    description={product.data.description}
+    image={optimized.src}
+    datePublished={product.data.publishDate}
+    dateModified={product.data.updatedDate}
+  />
+
+  <article class="product">
+    <p class="breadcrumb"><a href="/">所有文章</a> / {product.data.category}</p>
+
+    <header class="product-header">
+      <h1>{product.data.title}</h1>
+      <div class="cert-stamp" aria-hidden="false">
+        <span>建議售價</span>
+        <b>{priceFormatted}</b>
+      </div>
+    </header>
+
+    <img
+      src={optimized.src}
+      alt={product.data.image_alt}
+      width={optimized.attributes.width}
+      height={optimized.attributes.height}
+      class="product-image"
+    />
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="product-footer">
+      <time datetime={product.data.publishDate.toISOString()}>
+        發布於 {product.data.publishDate.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      {product.data.tags.length > 0 && (
+        <ul class="tags">
+          {product.data.tags.map((tag) => <li>#{tag}</li>)}
+        </ul>
+      )}
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-asphalt);
+    margin: 2rem 0 1.5rem;
+  }
+
+  .breadcrumb a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  .product-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .product-header h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    line-height: 1.35;
+    margin: 0;
+    max-width: 28ch;
+  }
+
+  .product-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 2rem;
+    background: var(--color-hairline);
+  }
+
+  .prose {
+    max-width: var(--measure);
+  }
+
+  .prose :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-top: 2.5rem;
+  }
+
+  .prose :global(p) {
+    margin: 0 0 1.25rem;
+  }
+
+  .prose :global(ul) {
+    padding-left: 1.25rem;
+  }
+
+  .product-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-hairline);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product-footer time {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-asphalt);
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-signal);
+  }
+</style>

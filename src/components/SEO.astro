@@ -1,0 +1,41 @@
+---
+// 共用 SEO 元件：統一管理 title / meta description / Open Graph / Twitter Card / canonical
+// 用法：<SEO title="..." description="..." image={...} />
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article' | 'product';
+  noindex?: boolean;
+}
+
+const { title, description, image, type = 'website', noindex = false } = Astro.props;
+
+const siteName = 'Riderment 安全帽選購誌';
+const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
+
+// 用 Astro.site + Astro.url 產生絕對網址，避免相對路徑在社群分享時失效
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = image ? new URL(image, Astro.site).toString() : undefined;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content="zh_TW" />
+{ogImageURL && <meta property="og:image" content={ogImageURL} />}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content={ogImageURL ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+{ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
