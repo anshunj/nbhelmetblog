@@ -9,7 +9,8 @@ content:
     label: 文章
     type: collection
     path: src/content/products
-    filename: '{fields.title | slugify}.md'
+    extension: md
+    filename: '{fields.title | slugify}'
     view:
       fields:
         - title
