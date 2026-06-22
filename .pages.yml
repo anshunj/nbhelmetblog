@@ -9,7 +9,6 @@ content:
     label: 文章
     type: collection
     path: src/content/products
-    extension: md
     view:
       fields:
         - title
@@ -17,6 +16,7 @@ content:
         - publishDate
         - draft
       primary: title
+      extension: md
       sort:
         - publishDate
       default:
