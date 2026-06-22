@@ -1,7 +1,7 @@
 ---
 title: "RM-X1 全罩式安全帽：通勤族的第一頂正式裝備"
 description: "RM-X1 是針對日常通勤設計的全罩式安全帽，重量輕、靜音表現好，適合每天騎 30 分鐘以上的人。"
-image: "./example-helmet.svg"
+image: "/uploads/example-helmet.svg"
 image_alt: "RM-X1 全罩式安全帽側面照，橘黑配色"
 price: 2480
 currency: "TWD"

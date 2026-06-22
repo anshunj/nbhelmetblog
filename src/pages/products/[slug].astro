@@ -1,6 +1,5 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { getImage } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import JsonLd from '../../components/JsonLd.astro';
 
@@ -14,7 +13,6 @@ export async function getStaticPaths() {
 
 const { product } = Astro.props;
 const { Content } = await render(product);
-const optimized = await getImage({ src: product.data.image, width: 960 });
 
 const priceFormatted = new Intl.NumberFormat('zh-TW', {
   style: 'currency',
@@ -26,14 +24,14 @@ const priceFormatted = new Intl.NumberFormat('zh-TW', {
 <BaseLayout
   title={product.data.title}
   description={product.data.description}
-  image={optimized.src}
+  image={product.data.image}
   type="product"
 >
   <JsonLd
     type="Product"
     name={product.data.title}
     description={product.data.description}
-    image={optimized.src}
+    image={product.data.image}
     price={product.data.price}
     currency={product.data.currency}
     availability={product.data.availability}
@@ -43,7 +41,7 @@ const priceFormatted = new Intl.NumberFormat('zh-TW', {
     type="Article"
     headline={product.data.title}
     description={product.data.description}
-    image={optimized.src}
+    image={product.data.image}
     datePublished={product.data.publishDate}
     dateModified={product.data.updatedDate}
   />
@@ -60,10 +58,8 @@ const priceFormatted = new Intl.NumberFormat('zh-TW', {
     </header>
 
     <img
-      src={optimized.src}
+      src={product.data.image}
       alt={product.data.image_alt}
-      width={optimized.attributes.width}
-      height={optimized.attributes.height}
       class="product-image"
     />
 

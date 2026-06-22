@@ -1,0 +1,83 @@
+media:
+  - name: uploads
+    label: 圖片
+    input: public/uploads
+    output: /uploads
+
+content:
+  - name: posts
+    label: 文章
+    type: collection
+    path: src/content/products
+    filename: '{fields.title | slugify}.md'
+    view:
+      fields:
+        - title
+        - category
+        - publishDate
+        - draft
+      primary: title
+      sort:
+        - publishDate
+      default:
+        sort: publishDate
+        order: desc
+    fields:
+      - name: title
+        label: 標題
+        type: string
+        required: true
+        description: 顯示在頁面大標與瀏覽器分頁，建議 60 字內
+      - name: description
+        label: 摘要
+        type: text
+        required: true
+        description: 給 Google 與列表頁看的簡介，150-160 字內
+      - name: image
+        label: 主圖
+        type: image
+        media: uploads
+        required: true
+      - name: image_alt
+        label: 圖片文字說明
+        type: string
+        required: true
+      - name: price
+        label: 價格
+        type: number
+        required: true
+      - name: currency
+        label: 幣別
+        type: string
+        default: TWD
+      - name: category
+        label: 分類
+        type: string
+        required: true
+      - name: availability
+        label: 庫存狀態
+        type: select
+        options:
+          values:
+            - { label: 有現貨, value: InStock }
+            - { label: 缺貨, value: OutOfStock }
+            - { label: 預購, value: PreOrder }
+        default: InStock
+      - name: publishDate
+        label: 發布日期
+        type: date
+        required: true
+      - name: updatedDate
+        label: 更新日期
+        type: date
+      - name: tags
+        label: 標籤
+        type: string
+        list: true
+      - name: draft
+        label: 設為草稿（不公開）
+        type: boolean
+        default: false
+      - name: body
+        label: 內文
+        type: rich-text
