@@ -10,7 +10,6 @@ content:
     type: collection
     path: src/content/products
     extension: md
-    filename: '{fields.title | slugify}'
     view:
       fields:
         - title
